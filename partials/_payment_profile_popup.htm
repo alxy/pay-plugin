@@ -1,0 +1,112 @@
+<!--<div class="control-popup" id="contentBasic">-->
+    <!--<div class="modal-dialog">-->
+        <!--<div class="modal-content">-->
+            <!--<div class="modal-body">-->
+                <!--<button type="button" class="close" data-dismiss="modal">&times;</button>-->
+                <!--<p>This is a very basic example of a popup...</p>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+
+<?= Form::open(['id' => 'disableForm']) ?>
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="popup">&times;</button>
+    <h4 class="modal-title">Update payment profile</h4>
+</div>
+<div class="modal-body">
+
+    <?php if ($this->fatalError): ?>
+    <p class="flash-message static error"><?= $fatalError ?></p>
+    <?php endif ?>
+
+    <!--<p><?= e(trans('responsiv.pay::lang.invoice.current_status_name', ['name'=> 'test'])) ?></p>-->
+
+    <div class="form-preview">
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="cardFirstName">Cardholder First Name</label>
+                <div><input autocomplete="off" name="first_name" value="" id="cardFirstName" type="text" class="form-control" /></div>
+            </div>
+
+            <div class="col-md-6 form-group">
+                <label for="cardLastName">Cardholder Last Name</label>
+                <div><input autocomplete="off" name="last_name" value="" id="cardLastName" type="text" class="form-control" /></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="cardAcct">Credit Card Number</label>
+            <div><input autocomplete="off" name="card_number" value="**** **** **** <?= $profile->card_last_four ?>" id="cardAcct" type="text" class="form-control" /></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 form-group dropdown-field">
+                <label for="cardExpDate-Month">Expiration Date - Month</label>
+                <select autocomplete="off" name="expiry_date_month" id="cardExpDate-Month" class="form-control custom-select">
+                    <?php for($month = 1; $month <= 12; $month++): ?>
+                    <?= debug($profile->profile_data); ?>
+                    <option value="<?= $month ?>" <?= (@$profile->profile_data['expiry_month'] == $month) ? 'selected="selected"' : '' ?>><?= $month ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+
+            <div class="col-md-6 form-group dropdown-field">
+                <label for="cardExpDate-Year">Expiration Date - Year</label>
+                <select autocomplete="off" name="expiry_date_year" id="cardExpDate-Year" class="form-control custom-select">
+                    <?php
+                    $startYear = date('Y');
+                    for($year = $startYear; $year <= $startYear+10; $year++): ?>
+                    ?>
+                    <option value="<?= $year ?>" <?= (@$profile->profile_data['expiry_year'] == $year) ? 'selected="selected"' : '' ?>><?= $year ?></option>
+                    <?php endfor; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 form-group">
+                <label for="CVV">
+                    CVV
+                </label>
+                <div>
+                    <input autocomplete="off" name="CVV" value="" id="CVV" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-6 form-group">
+                <small class="text-muted">
+                    For MasterCard, Visa, and Discover, the CVV is the last three digits in the signature area on the back of your card.
+                    For American Express, it's the four digits on the front of the card.
+                </small>
+            </div>
+        </div>
+
+        <input type="hidden" value="<?= $profile->id ?>" name="profile_id">
+    </div>
+
+</div>
+
+<div class="modal-footer" style="text-align: left">
+    <button
+            type="submit"
+            class="btn btn-primary"
+            data-request="onUpdatePaymentProfile"
+            data-request-confirm="Are you sure?"
+            data-popup-load-indicator>
+        <?= e(trans('backend::lang.form.save')) ?>
+    </button>
+    <button
+            type="button"
+            class="btn btn-default"
+            data-dismiss="popup">
+        <?= e(trans('backend::lang.form.cancel')) ?>
+    </button>
+    <button
+            type="button"
+            class="oc-icon-trash-o btn-icon danger pull-right"
+            data-request="onDeletePaymentProfile"
+            data-load-indicator="Deleting Payment Profile..."
+            data-request-confirm="Delete this payment profile?">
+    </button>
+</div>
+<?= Form::close() ?>

@@ -1,8 +1,10 @@
 <?php namespace Responsiv\Pay;
 
 use Backend;
+use Flash;
 use RainLab\User\Controllers\Users;
 use RainLab\User\Models\User;
+use Redirect;
 use Responsiv\Pay\Models\UserProfile;
 use System\Classes\PluginBase;
 use Lang;
@@ -54,6 +56,42 @@ class Plugin extends PluginBase
                     'path' => '$/responsiv/pay/partials/_payment_profiles.htm'
                 ],
             ]);
+
+        });
+
+        Users::extend(function($controller) {
+            $controller->addDynamicMethod('onLoadProfilePopup', function() use($controller) {
+                $profile = UserProfile::find(post('profile_id'));
+                $partialName = '$/responsiv/pay/paymenttypes/stripe/profile_form.htm';
+
+                return $controller->makePartial('$/responsiv/pay/partials/_payment_profile_popup.htm', ['profile' => $profile, 'form' => $controller->makePartial($partialName)]);
+            });
+
+            $controller->addDynamicMethod('onUpdatePaymentProfile', function() use($controller) {
+                $profile = UserProfile::find(post('profile_id'));
+                $paymentMethod = $profile->payment_method;
+
+                $result = $paymentMethod->updateUserProfile($profile->user, post());
+
+                if ($result) {
+                    Flash::success('Payment profile updated.');
+                } else {
+                    Flash::error('Something went wrong.');
+                }
+
+                return Redirect::refresh();
+            });
+
+            $controller->addDynamicMethod('onDeletePaymentProfile', function() use($controller) {
+                $profile = UserProfile::find(post('profile_id'));
+                $paymentMethod = $profile->payment_method;
+
+                $result = $paymentMethod->deleteUserProfile($profile->user, post());
+                Flash::success('Payment profile deleted.');
+
+                return Redirect::refresh();
+            });
+
 
         });
     }

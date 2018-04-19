@@ -18,7 +18,15 @@
 
 <ul>
     <?php foreach($model->payment_profiles as $profile): ?>
-    <li class="bold"><i class="icon-credit-card"></i> **** **** **** <?= $profile->card_last_four; ?> <?php if($profile->is_primary): ?><span class="label label-primary">Primary</span><?php endif; ?></li>
-    <?= debug($profile->profile_data); ?>
+    <li class="bold">
+        <a
+                data-control="popup"
+                data-handler="onLoadProfilePopup"
+                data-extra-data="profile_id: <?= $profile->id; ?>"
+                href="javascript:;">
+            <i class="icon-credit-card"></i> **** **** **** <?= $profile->card_last_four; ?>
+        </a>
+        <?php if($profile->is_primary): ?><span class="label label-primary">Primary</span><?php endif; ?>
+    </li>
     <?php endforeach; ?>
 </ul>

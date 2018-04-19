@@ -20,8 +20,15 @@ class UserProfile extends Model
     protected $encryptable = [
         'profile_data',
         'card_brand',
-//        'card_last_four',
         'card_country'
+    ];
+
+    /**
+     * @var array Relations
+     */
+    public $belongsTo = [
+        'user' => ['RainLab\User\Models\User'],
+        'payment_method' => ['Responsiv\Pay\Models\PaymentMethod'],
     ];
 
     /**
@@ -60,6 +67,7 @@ class UserProfile extends Model
      */
     public function setProfileData($profileData, $cardDigits)
     {
+        traceLog($profileData);
         $this->profile_data = $profileData;
         $this->card_last_four = $cardDigits;
         $this->save();
