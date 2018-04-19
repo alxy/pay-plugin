@@ -1,0 +1,24 @@
+<style>
+    .label-primary {
+        background-color: #1991d1;
+    }
+    .label {
+        display: inline;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+    }
+</style>
+
+<ul>
+    <?php foreach($model->payment_profiles as $profile): ?>
+    <li class="bold"><i class="icon-credit-card"></i> **** **** **** <?= $profile->card_last_four; ?> <?php if($profile->is_primary): ?><span class="label label-primary">Primary</span><?php endif; ?></li>
+    <?= debug($profile->profile_data); ?>
+    <?php endforeach; ?>
+</ul>
